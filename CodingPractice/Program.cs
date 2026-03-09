@@ -266,11 +266,67 @@ string ClassifyPoint(int x, int y) => (x, y) switch
 Console.WriteLine("'''\n");
 
 Console.WriteLine("'''");
+string[] season = new string[] { "봄", "여름", "가을", "겨울" };
+foreach(var day in season)
+{
+    Console.WriteLine($"{day} 낮: {GetTemperatureDescription(day, true)}");
+    Console.WriteLine($"{day} 밤: {GetTemperatureDescription(day, false)}");
+}
+string GetTemperatureDescription(string season, bool isDaytime) => (season, isDaytime) switch
+{
+    ("봄", true) => "따뜻한 낮",
+    ("봄", false) => "선선한 밤",
+    ("여름", true) => "무더운 낮",
+    ("여름", false) => "열대야",
+    ("가을", true) => "선선한 낮",
+    ("가을", false) => "쌀쌀한 밤",
+    ("겨울", true) => "추운 낮",
+    ("겨울", false) => "매서운 밤"
+};
 
+Console.WriteLine("'''\n");
+
+Console.WriteLine("'''");
+var products = new Product[]
+{
+    new Product { Name = "마우스", Price = 25000, Stock = 0 },
+    new Product { Name = "키보드", Price = 80000, Stock = 5 },
+    new Product { Name = "모니터", Price = 300000, Stock = 20 },
+    new Product { Name = "USB", Price = 5000, Stock = 100 }
+};
 string GetProductStatus(Product p) => p switch
 {
+    { Stock: 0 } => "품절",
+    { Stock: < 10 } when p.Price > 10000 => "재고 부족 (고가 상품)",
+    { Stock: < 10 } => "재고 부족",
+    { Price: > 50000 } => "프리미엄 상품",
+    _ => "일반 상품"
+};
+Console.WriteLine("'''\n");
 
+Console.WriteLine("'''");
+var characters = new Character[]
+{
+    new Character{Health = 0, Mana = 50, IsCombat = false},
+    new Character{Health = 15, Mana = 30, IsCombat = true},
+    new Character{Health = 50, Mana = 0, IsCombat = true},
+    new Character{Health = 90, Mana = 85, IsCombat = false},
+    new Character{Health = 60, Mana = 40, IsCombat = true}
+};
+for(int i = 0; i < characters.Length; i++)
+{
+    Console.WriteLine($"캐릭터{i+1} (HP:{characters[i].Health}, MP:{characters[i].Mana}): {GetCharacterStatus(characters[i])}");
 }
+string GetCharacterStatus(Character c) => c switch
+{
+    { Health: 0 } => "사망",
+    { Health: <= 20, IsCombat: true } => "위험! 즉시 회복 필요",
+    { Health: <= 20 } => "체력 낮음",
+    { Mana: 0, IsCombat: true } => "마나 고갈 - 물리 공격만 가능",
+    { Health: >= 80, Mana: >= 80 } => "최상의 상태",
+    { IsCombat: true } => "전투 중",
+    _ => "일반"
+};
 Console.WriteLine("'''\n");
 
 class Person
@@ -292,4 +348,10 @@ class Product
     public string Name { get; set; }
     public int Price { get; set; }
     public int Stock { get; set; }
+}
+class Character
+{
+    public int Health { get; set; }
+    public int Mana { get; set; }
+    public bool IsCombat { get; set; }
 }
